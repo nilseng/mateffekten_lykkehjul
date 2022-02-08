@@ -22,8 +22,13 @@ export const Wheel = () => {
   return (
     <>
       <svg height="100%" width="100%" viewBox="0 0 1000 1000">
+        <g className="App-logo">
+          {descriptions.map((d, i) => (
+            <Slice key={i} sliceCount={descriptions.length} sliceIndex={i} radius={radius} center={center} />
+          ))}
+        </g>
         <g style={{ cursor: "pointer" }}>
-          <circle cx="500" cy="500" r="20%" fill="#f8f9fa" />
+          <circle cx="500" cy="500" r="12%" fill="#f8f9fa" />
           <text
             className="font-bold"
             x="500"
@@ -31,13 +36,31 @@ export const Wheel = () => {
             textAnchor="middle"
             alignmentBaseline="middle"
             style={{ userSelect: "none" }}
-            fontSize="8rem"
+            fontSize="2em"
           >
             Klikk her!
           </text>
         </g>
+      </svg>
+      <svg height="100%" width="100%" viewBox="0 0 1000 1000">
         <g className="App-logo">
-          <Slice sliceCount={descriptions.length} sliceIndex={1} radius={radius} center={center} />
+          {foods.map((d, i) => (
+            <Slice key={i} sliceCount={descriptions.length} sliceIndex={i} radius={radius} center={center} />
+          ))}
+        </g>
+        <g style={{ cursor: "pointer" }}>
+          <circle cx="500" cy="500" r="12%" fill="#f8f9fa" />
+          <text
+            className="font-bold"
+            x="500"
+            y="500"
+            textAnchor="middle"
+            alignmentBaseline="middle"
+            style={{ userSelect: "none" }}
+            fontSize="2em"
+          >
+            Klikk her!
+          </text>
         </g>
       </svg>
     </>

@@ -13,20 +13,20 @@ export const Slice = ({ sliceCount, sliceIndex, radius, center }: IProps) => {
   const [thetaDeltaDeg] = useState<number>(360 * (1 / sliceCount));
 
   const [intersection0] = useState<string>(
-    `${center.x + radius * Math.cos(theta0)} ${center.y + radius * Math.sin(theta0)}`
+    `${center.x + radius * Math.cos(theta0)}, ${center.y + radius * Math.sin(theta0)}`
   );
   const [intersection] = useState<string>(
-    `${center.x + radius * Math.cos(theta)} ${center.y + radius * Math.sin(theta)}`
+    `${center.x + radius * Math.cos(theta)}, ${center.y + radius * Math.sin(theta)}`
   );
 
   return (
     <path
       fill="#C5192D"
-      stroke="#C5192D"
+      stroke="black"
       strokeWidth={5}
       d={`M ${center.x},${center.y} 
       L ${intersection0} 
-      A ${intersection0} ${thetaDeltaDeg},0,1 ${intersection}
+      A ${radius},${radius} ${sliceIndex * thetaDeltaDeg},0,1 ${intersection}
       M ${center.x},${center.y} 
       L ${intersection}
       `}
