@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
 import { ISliceConfig } from "./components/Slice";
 import { Wheel } from "./components/Wheel";
@@ -31,20 +31,30 @@ const foods: ISliceConfig[] = [
 ];
 
 function App() {
-  const [compoundWord] = useState<string>("placeholder");
+  const [slice1, setSlice1] = useState<ISliceConfig>();
+  const [slice2, setSlice2] = useState<ISliceConfig>();
+  const [compoundWord, setCompoundWord] = useState<string>("Spinn hjulene!");
+
+  useEffect(() => {
+    if (slice1 && slice2) {
+      setCompoundWord(slice1.text + "s" + slice2.text);
+    }
+  }, [slice1, slice2]);
 
   return (
     <div className="App">
       <header className="App-header">
-        <div className="w-full h-full grid sm:grid-cols-5 gap-4 px-4">
+        <div className="w-full h-full grid sm:grid-cols-5 gap-4 px-10">
           <div className="sm:col-span-2">
-            <Wheel slices={descriptions} />
+            <Wheel slices={descriptions} setSlice={setSlice1} />
           </div>
           <div className="flex w-full items-center justify-center">
-            <div className="border border-gray-500 rounded-full p-4">{compoundWord}</div>
+            <div className="w-full border border-gray-500 rounded-full font-bold text-gray-600 break-words p-4">
+              {compoundWord}
+            </div>
           </div>
           <div className="sm:col-span-2">
-            <Wheel slices={foods} />
+            <Wheel slices={foods} setSlice={setSlice2} />
           </div>
         </div>
       </header>

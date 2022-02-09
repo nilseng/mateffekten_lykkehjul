@@ -23,9 +23,9 @@ export const Slice = ({ sliceCount, sliceIndex, radius, center, sliceConfig }: I
   const [intersection0X] = useState<number>(center.x + radius * Math.cos(theta0));
   const [intersection0Y] = useState<number>(center.y + radius * Math.sin(theta0));
   const [intersection0] = useState<string>(`${intersection0X}, ${intersection0Y}`);
-  const [intersection] = useState<string>(
-    `${center.x + radius * Math.cos(theta)}, ${center.y + radius * Math.sin(theta)}`
-  );
+  const [intersectionX] = useState<number>(center.x + radius * Math.cos(theta));
+  const [intersectionY] = useState<number>(center.y + radius * Math.sin(theta));
+  const [intersection] = useState<string>(`${intersectionX}, ${intersectionY}`);
 
   return (
     <g>
@@ -43,12 +43,13 @@ export const Slice = ({ sliceCount, sliceIndex, radius, center, sliceConfig }: I
       {/* TODO: Figure out slice height */}
       <g x={center.x} y={center.y} transform={`rotate(${theta0deg + thetaDeltaDeg / 2} ${center.x} ${center.y})`}>
         <foreignObject x={center.x + 20} y={center.y - 30} width={radius} height={100}>
-          <p className="text-gray-50 font-bold" style={{ fontSize: "calc(24px + 2vmin)" }}>
+          <p className="text-gray-50 font-bold text-left pl-40" style={{ fontSize: "calc(24px + 2vmin)" }}>
             {sliceConfig.text}
           </p>
         </foreignObject>
       </g>
-      <circle />
+      <circle cx={intersection0X} cy={intersection0Y} r={12} />
+      <circle cx={intersectionX} cy={intersectionY} r={12} />
     </g>
   );
 };
