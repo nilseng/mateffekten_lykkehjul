@@ -10,7 +10,7 @@
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 1s linear;
-    transform-origin: 48.8% 48.8%;
+    transform-origin: 48.8% 38%;
   }
 }
 

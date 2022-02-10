@@ -12,6 +12,7 @@ export interface ISliceConfig {
   bgColor: string;
   text: string;
   imageSrc?: string;
+  compoundPostfix?: string;
 }
 
 export const Slice = ({ sliceCount, sliceIndex, radius, center, sliceConfig }: IProps) => {
@@ -42,10 +43,20 @@ export const Slice = ({ sliceCount, sliceIndex, radius, center, sliceConfig }: I
       />
       {/* TODO: Figure out slice height */}
       <g x={center.x} y={center.y} transform={`rotate(${theta0deg + thetaDeltaDeg / 2} ${center.x} ${center.y})`}>
-        <foreignObject x={center.x + 20} y={center.y - 30} width={radius} height={100}>
-          <p className="text-gray-50 font-bold text-left pl-40" style={{ fontSize: "calc(24px + 2vmin)" }}>
-            {sliceConfig.text}
-          </p>
+        <foreignObject
+          x={center.x + (sliceConfig.imageSrc ? 0 : 20)}
+          y={center.y - (sliceConfig.imageSrc ? 80 : 30)}
+          width={radius}
+          height={160}
+        >
+          {sliceConfig.imageSrc && (
+            <img className="ml-52" src={sliceConfig.imageSrc} height={160} width={160} alt={sliceConfig.text} />
+          )}
+          {!sliceConfig.imageSrc && (
+            <p className="text-gray-50 font-bold text-left pl-40" style={{ fontSize: "calc(24px + 2vmin)" }}>
+              {sliceConfig.text}
+            </p>
+          )}
         </foreignObject>
       </g>
       <circle cx={intersection0X} cy={intersection0Y} r={12} />

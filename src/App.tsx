@@ -3,28 +3,34 @@ import "./App.css";
 import { ISliceConfig } from "./components/Slice";
 import { Wheel } from "./components/Wheel";
 import { colors } from "./utils/colors";
+import apple from "./images/apple.png";
+import carrot from "./images/carrot.png";
+import cassava from "./images/cassava.png";
+import leafs from "./images/leafs.png";
+import lettuce from "./images/lettuce.png";
+import orange from "./images/orange.png";
 
 const descriptions: ISliceConfig[] = [
   { text: "Energi", bgColor: colors.blue },
-  { text: "Rettferdighet", bgColor: colors.yellow },
-  { text: "Likestilling", bgColor: colors.orange2 },
-  { text: "Utvikling", bgColor: colors.orange },
-  { text: "Kunnskap", bgColor: colors.green },
-  { text: "Forskning", bgColor: colors.red },
+  { text: "Rettferdighet", bgColor: colors.yellow, compoundPostfix: "s" },
+  { text: "Likestilling", bgColor: colors.orange2, compoundPostfix: "s" },
+  { text: "Utvikling", bgColor: colors.orange, compoundPostfix: "s" },
+  { text: "Kunnskap", bgColor: colors.green, compoundPostfix: "s" },
+  { text: "Forskning", bgColor: colors.red, compoundPostfix: "s" },
   { text: "Teknologi", bgColor: colors.blue },
-  { text: "Utdanning", bgColor: colors.orange },
-  { text: "Oppdagelse", bgColor: colors.green },
-  { text: "Bærekraft", bgColor: colors.red },
+  { text: "Utdanning", bgColor: colors.orange, compoundPostfix: "s" },
+  { text: "Oppdagelse", bgColor: colors.green, compoundPostfix: "s" },
+  { text: "Bærekraft", bgColor: colors.red, compoundPostfix: "s" },
 ];
 
 const foods: ISliceConfig[] = [
   { text: "mango", bgColor: colors.blue },
-  { text: "cassavarot", bgColor: colors.yellow },
-  { text: "gulrot", bgColor: colors.orange2 },
-  { text: "blader", bgColor: colors.orange },
-  { text: "eple", bgColor: colors.green },
-  { text: "brokkoli", bgColor: colors.red },
-  { text: "appelsin", bgColor: colors.blue },
+  { text: "cassavarot", bgColor: colors.yellow, imageSrc: cassava },
+  { text: "gulrot", bgColor: colors.orange2, imageSrc: carrot },
+  { text: "blader", bgColor: colors.orange, imageSrc: leafs },
+  { text: "eple", bgColor: colors.green, imageSrc: apple },
+  { text: "lettuce", bgColor: colors.red, imageSrc: lettuce },
+  { text: "appelsin", bgColor: colors.blue, imageSrc: orange },
   { text: "bønne", bgColor: colors.orange },
   { text: "mais", bgColor: colors.green },
   { text: "høne", bgColor: colors.red },
@@ -37,7 +43,7 @@ function App() {
 
   useEffect(() => {
     if (slice1 && slice2) {
-      setCompoundWord(slice1.text + "s" + slice2.text);
+      setCompoundWord(slice1.text + (slice1.compoundPostfix ?? "") + slice2.text);
     }
   }, [slice1, slice2]);
 
