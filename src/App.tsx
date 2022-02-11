@@ -9,6 +9,10 @@ import cassava from "./images/cassava.png";
 import leafs from "./images/leafs.png";
 import lettuce from "./images/lettuce.png";
 import orange from "./images/orange.png";
+import mango from "./images/mango.png";
+import bean from "./images/bean.png";
+import corn from "./images/corn.png";
+import hen from "./images/hen.png";
 
 const descriptions: ISliceConfig[] = [
   { text: "Energi", bgColor: colors.blue },
@@ -24,16 +28,16 @@ const descriptions: ISliceConfig[] = [
 ];
 
 const foods: ISliceConfig[] = [
-  { text: "mango", bgColor: colors.blue },
+  { text: "mango", bgColor: colors.blue, imageSrc: mango },
   { text: "cassavarot", bgColor: colors.yellow, imageSrc: cassava },
   { text: "gulrot", bgColor: colors.orange2, imageSrc: carrot },
   { text: "blader", bgColor: colors.orange, imageSrc: leafs },
   { text: "eple", bgColor: colors.green, imageSrc: apple },
   { text: "lettuce", bgColor: colors.red, imageSrc: lettuce },
   { text: "appelsin", bgColor: colors.blue, imageSrc: orange },
-  { text: "bønne", bgColor: colors.orange },
-  { text: "mais", bgColor: colors.green },
-  { text: "høne", bgColor: colors.red },
+  { text: "bønne", bgColor: colors.orange, imageSrc: bean },
+  { text: "mais", bgColor: colors.green, imageSrc: corn },
+  { text: "høne", bgColor: colors.red, imageSrc: hen },
 ];
 
 function App() {

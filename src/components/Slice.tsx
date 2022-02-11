@@ -50,7 +50,7 @@ export const Slice = ({ sliceCount, sliceIndex, radius, center, sliceConfig }: I
           height={160}
         >
           {sliceConfig.imageSrc && (
-            <img className="ml-60" src={sliceConfig.imageSrc} height={160} width={160} alt={sliceConfig.text} />
+            <img className="ml-60" src={sliceConfig.imageSrc} height={"auto"} width={160} alt={sliceConfig.text} />
           )}
           {!sliceConfig.imageSrc && (
             <p className="text-gray-50 font-bold text-left pl-40" style={{ fontSize: "calc(24px + 2vmin)" }}>
