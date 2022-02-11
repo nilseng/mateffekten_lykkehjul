@@ -4,7 +4,7 @@ import { WheelButton } from "./WheelButton";
 
 const radius = 500;
 const center = { x: 500, y: 500 };
-const spinDurMs = 2000;
+const spinDurMs = 4000;
 const spinDur = spinDurMs / 2;
 const sliceOffset = 7;
 
@@ -19,7 +19,8 @@ interface IProps {
 
 export const Wheel = ({ slices, setSlice }: IProps) => {
   const [isSpinning, setIsSpinning] = useState<boolean>();
-  const [randomSliceIndex, setRandomSliceIndex] = useState<number>(0);
+  const [sliceIndex, setSliceIndex] = useState<number>(0);
+  const [newSliceIndex, setNewSliceIndex] = useState<number>(0);
 
   const animateRef = useRef<SVGAnimateTransformElement>(null);
 
@@ -29,8 +30,9 @@ export const Wheel = ({ slices, setSlice }: IProps) => {
     setTimeout(() => {
       setIsSpinning(false);
       setSlice(slices[(randomIndex + sliceOffset) % slices.length]);
+      setSliceIndex(randomIndex);
     }, spinDur);
-    setRandomSliceIndex(randomIndex);
+    setNewSliceIndex(randomIndex);
   };
 
   useEffect(() => {
@@ -42,15 +44,22 @@ export const Wheel = ({ slices, setSlice }: IProps) => {
   return (
     <>
       <svg height="100%" width="100%" viewBox="-12 -120 1024 1240">
-        <g transform={`rotate(${getRotationAngle(randomSliceIndex, slices.length)} 500 500)`}>
+        <g transform={`rotate(${getRotationAngle(newSliceIndex, slices.length)} 500 500)`}>
           {isSpinning && (
             <animateTransform
               ref={animateRef}
               attributeName="transform"
               attributeType="XML"
               type="rotate"
-              from={`${getRotationAngle(randomSliceIndex, slices.length)} 500 500`}
-              to={`${720 + getRotationAngle(randomSliceIndex, slices.length)} 500 500`}
+              values={`
+              ${getRotationAngle(sliceIndex, slices.length)} 500 500;
+              ${90 + getRotationAngle(sliceIndex, slices.length)} 500 500;
+              ${540 + getRotationAngle(sliceIndex, slices.length)} 500 500;
+              ${
+                720 + getRotationAngle(sliceIndex, slices.length) + getRotationAngle(newSliceIndex, slices.length)
+              } 500 500
+              `}
+              keyTimes={"0;0.3;0.6;1"}
               dur={spinDur / 1000}
               restart="always"
             />

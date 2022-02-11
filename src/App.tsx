@@ -33,7 +33,7 @@ const foods: ISliceConfig[] = [
   { text: "gulrot", bgColor: colors.orange2, imageSrc: carrot },
   { text: "blader", bgColor: colors.orange, imageSrc: leafs },
   { text: "eple", bgColor: colors.green, imageSrc: apple },
-  { text: "lettuce", bgColor: colors.red, imageSrc: lettuce },
+  { text: "salat", bgColor: colors.red, imageSrc: lettuce },
   { text: "appelsin", bgColor: colors.blue, imageSrc: orange },
   { text: "bønne", bgColor: colors.orange, imageSrc: bean },
   { text: "mais", bgColor: colors.green, imageSrc: corn },
