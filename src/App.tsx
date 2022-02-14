@@ -59,7 +59,7 @@ function App() {
             <Wheel slices={descriptions} setSlice={setSlice1} />
           </div>
           <div className="flex w-full items-center justify-center">
-            <div className="w-full border border-gray-500 rounded-full font-bold text-gray-600 break-words p-4">
+            <div className="w-full border-2 border-gray-500 rounded-full font-bold font-custom text-xl text-gray-600 break-words p-4">
               {compoundWord}
             </div>
           </div>
