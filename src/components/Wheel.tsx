@@ -17,7 +17,7 @@ const getTotalTicks = (currentIndex: number, newIndex: number, sliceCount: numbe
   return spins * sliceCount + ((currentIndex - newIndex + sliceCount) % sliceCount);
 };
 
-const getRotationAngle = (i: number, length: number, base = 360, offset = 0.0048): number => {
+const getRotationAngle = (i: number, length: number, base = 360, offset = 0): number => {
   return (base * (length - i)) / length - offset * base;
 };
 
@@ -77,6 +77,7 @@ export const Wheel = ({ slices, setSlice }: IProps) => {
   const animateRef = useRef<SVGAnimateTransformElement>(null);
 
   const spin = () => {
+    if (isSpinning) return;
     setIsSpinning(true);
     const randomIndex = Math.round(Math.random() * (slices.length - 1));
     const ticks = getTotalTicks(sliceIndex, randomIndex, slices.length);
@@ -121,7 +122,9 @@ export const Wheel = ({ slices, setSlice }: IProps) => {
           ))}
         </g>
         <WheelButton spin={spin} />
-        <line x1={500} y1={-120} x2={500} y2={40} stroke="black" strokeWidth={10} />
+        {/* <line x1={500} y1={-120} x2={500} y2={40} stroke="black" strokeWidth={10} />
+        <line x1={500} y1={-120} x2={600} y2={20} stroke="black" strokeWidth={10} /> */}
+        <polygon points="480,-20 520,-20 500,40" />
       </svg>
     </>
   );
