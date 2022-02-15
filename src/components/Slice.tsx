@@ -15,10 +15,14 @@ export interface ISliceConfig {
   compoundPostfix?: string;
 }
 
+const thetaOffset = -1 / 4;
+const thetaOffsetRad = 2 * Math.PI * thetaOffset;
+const thetaOffsetDeg = 360 * thetaOffset;
+
 export const Slice = ({ sliceCount, sliceIndex, radius, center, sliceConfig }: IProps) => {
-  const [theta0] = useState<number>(2 * Math.PI * (sliceIndex / sliceCount));
-  const [theta0deg] = useState<number>(360 * (sliceIndex / sliceCount));
-  const [theta] = useState<number>(2 * Math.PI * ((sliceIndex + 1) / sliceCount));
+  const [theta0] = useState<number>(2 * Math.PI * (sliceIndex / sliceCount) + thetaOffsetRad);
+  const [theta0deg] = useState<number>(360 * (sliceIndex / sliceCount) + thetaOffsetDeg);
+  const [theta] = useState<number>(2 * Math.PI * ((sliceIndex + 1) / sliceCount) + thetaOffsetRad);
   const [thetaDeltaDeg] = useState<number>(360 * (1 / sliceCount));
 
   const [intersection0X] = useState<number>(center.x + radius * Math.cos(theta0));
@@ -41,7 +45,6 @@ export const Slice = ({ sliceCount, sliceIndex, radius, center, sliceConfig }: I
       L ${intersection}
       `}
       />
-      {/* TODO: Figure out slice height */}
       <g x={center.x} y={center.y} transform={`rotate(${theta0deg + thetaDeltaDeg / 2} ${center.x} ${center.y})`}>
         <foreignObject
           x={center.x + (sliceConfig.imageSrc ? 0 : 20)}
