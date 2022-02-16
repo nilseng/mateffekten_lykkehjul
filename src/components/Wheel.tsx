@@ -5,7 +5,7 @@ import { WheelButton } from "./WheelButton";
 const radius = 500;
 const center = { x: 500, y: 500 };
 const spinDurMs = 20000;
-const spinDur = spinDurMs / 2;
+const spinDur = spinDurMs / 1000;
 //TODO: Set this to a random number in an interval?
 const spins = 10;
 
@@ -33,18 +33,44 @@ const getVelocity = (v0: number, accelleration: number, sliceAngle: number) =>
 
 const getTickTime = (sliceAngle: number, v_curr: number, v_next: number) => (2 * sliceAngle) / (v_curr + v_next);
 
-const getRotationAngles = (ticks: number, sliceAngle: number, theta0: number = 0): string => {
-  let angles = `${theta0} 500 500;`;
+const getRotationAngles = (
+  ticks: number,
+  sliceAngle: number,
+  theta0: number = 0,
+  centerX: number = 500,
+  centerY: number = 500
+): string => {
+  let angles = `${theta0} ${centerX} ${centerY};`;
   for (let i = 1; i < ticks; i++) {
-    angles += `${theta0 + i * sliceAngle} 500 500;`;
+    angles += `${theta0 + i * sliceAngle} ${centerX} ${centerY};`;
   }
-  angles += `${theta0 + ticks * sliceAngle} 500 500`;
+  angles += `${theta0 + ticks * sliceAngle} ${centerX} ${centerY}`;
+  return angles;
+};
+
+const getBreakRotationAngles = (
+  ticks: number,
+  maxAngle: number,
+  baseAngle: number = 0,
+  initialAngle: number = -10,
+  centerX: number = 500,
+  centerY: number = 500
+) => {
+  let angles = `${initialAngle} ${centerX} ${centerY};${maxAngle} ${centerX} ${centerY};`;
+  for (let i = 1; i < ticks; i++) {
+    angles += `${baseAngle} ${centerX} ${centerY};${maxAngle} ${centerX} ${centerY};`;
+  }
+  angles += `${baseAngle} ${centerX} ${centerY};${initialAngle} ${centerX} ${centerY};`;
   return angles;
 };
 
 const getSliceAngle = (sliceCount: number, base = 360) => base / sliceCount;
 
-const getTickTimes = (ticks: number, sliceCount: number, theta0: number = 0): string => {
+const getTickTimes = (
+  ticks: number,
+  sliceCount: number,
+  theta0: number = 0
+): { tickTimes: number[]; tickTimeString: string } => {
   const sliceAngle = getSliceAngle(sliceCount);
   const totalRotation = getTotalRotation(ticks, sliceCount);
   const theta = theta0 + totalRotation;
@@ -60,7 +86,20 @@ const getTickTimes = (ticks: number, sliceCount: number, theta0: number = 0): st
     tickTimes.push(t_next);
     tickTimeString += `${t_next};`;
   }
-  return tickTimeString + "1";
+  tickTimes.push(1);
+  tickTimeString += "1";
+  return { tickTimes, tickTimeString };
+};
+
+const getBreakTickTimes = (ticks: number, sliceCount: number, theta0: number = 0) => {
+  const { tickTimes } = getTickTimes(ticks, sliceCount, theta0);
+  let breakTickTimes = "";
+  for (let t = 0; t < tickTimes.length - 1; t++) {
+    const delta = (tickTimes[t + 1] - tickTimes[t]) * 0.3;
+    breakTickTimes += `${tickTimes[t]};${tickTimes[t] + delta};`;
+  }
+  breakTickTimes += `${tickTimes[tickTimes.length - 1]};${tickTimes[tickTimes.length - 1]}`;
+  return breakTickTimes;
 };
 
 interface IProps {
@@ -75,6 +114,7 @@ export const Wheel = ({ slices, setSlice }: IProps) => {
   const [ticks, setTicks] = useState<number>(0);
 
   const animateRef = useRef<SVGAnimateTransformElement>(null);
+  const animateBrakeRef = useRef<SVGAnimateTransformElement>(null);
 
   const spin = () => {
     if (isSpinning) return;
@@ -87,13 +127,14 @@ export const Wheel = ({ slices, setSlice }: IProps) => {
       setSlice(slices[randomIndex]);
       setSliceIndex(randomIndex);
       setTicks(0);
-    }, spinDur);
+    }, spinDurMs);
     setNewSliceIndex(randomIndex);
   };
 
   useEffect(() => {
     if (isSpinning) {
       animateRef.current?.beginElement();
+      animateBrakeRef.current?.beginElement();
     }
   }, [isSpinning]);
 
@@ -112,8 +153,8 @@ export const Wheel = ({ slices, setSlice }: IProps) => {
                 getSliceAngle(slices.length),
                 getRotationAngle(sliceIndex, slices.length)
               )}
-              keyTimes={getTickTimes(ticks, slices.length, getRotationAngle(sliceIndex, slices.length))}
-              dur={spinDur / 1000}
+              keyTimes={getTickTimes(ticks, slices.length, getRotationAngle(sliceIndex, slices.length)).tickTimeString}
+              dur={spinDur}
               restart="always"
             />
           )}
@@ -122,9 +163,22 @@ export const Wheel = ({ slices, setSlice }: IProps) => {
           ))}
         </g>
         <WheelButton spin={spin} />
-        {/* <line x1={500} y1={-120} x2={500} y2={40} stroke="black" strokeWidth={10} />
-        <line x1={500} y1={-120} x2={600} y2={20} stroke="black" strokeWidth={10} /> */}
-        <polygon points="480,-20 520,-20 500,40" />
+        <g transform={`rotate(-7.2 500 -120)`}>
+          {isSpinning && (
+            <animateTransform
+              ref={animateBrakeRef}
+              attributeName="transform"
+              attributeType="XML"
+              type="rotate"
+              values={getBreakRotationAngles(ticks, -40, -7.2, -7.2, 500, -120)}
+              keyTimes={getBreakTickTimes(ticks, slices.length)}
+              dur={spinDur}
+              restart="always"
+            />
+          )}
+          <line x1={500} y1={-108} x2={500} y2={40} stroke="black" strokeWidth={10} />
+        </g>
+        <circle cx={502.5} cy={-108} r={12} />
       </svg>
     </>
   );
