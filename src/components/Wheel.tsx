@@ -17,8 +17,8 @@ const getTotalTicks = (currentIndex: number, newIndex: number, sliceCount: numbe
   return spins * sliceCount + ((currentIndex - newIndex + sliceCount) % sliceCount);
 };
 
-const getRotationAngle = (i: number, length: number, base = 360, offset = 0): number => {
-  return (base * (length - i)) / length - offset * base;
+const getRotationAngle = (i: number, length: number, base = 360, offsetSlices = 0.5): number => {
+  return (base * (length - i)) / length - offsetSlices * getSliceAngle(length);
 };
 
 // Assumes the final angular velocity to be 0
