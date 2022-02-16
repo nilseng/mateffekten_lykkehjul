@@ -1,13 +1,20 @@
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
+import {
+  brakeLength,
+  brakeOverlap,
+  brakeRootRadius,
+  brakeWidth,
+  center,
+  initialBrakeAngle,
+  maxBrakeAngle,
+  radius,
+  sliceEdgeRadius,
+  spinDur,
+  spinDurMs,
+  spins,
+} from "../appConfig/wheelSettings";
 import { ISliceConfig, Slice } from "./Slice";
 import { WheelButton } from "./WheelButton";
-
-const radius = 500;
-const center = { x: 500, y: 500 };
-const spinDurMs = 20000;
-const spinDur = spinDurMs / 1000;
-//TODO: Set this to a random number in an interval?
-const spins = 10;
 
 const getTotalRotation = (ticks: number, sliceCount: number, base = 360) => {
   return (base * ticks) / sliceCount;
@@ -37,8 +44,8 @@ const getRotationAngles = (
   ticks: number,
   sliceAngle: number,
   theta0: number = 0,
-  centerX: number = 500,
-  centerY: number = 500
+  centerX: number = center.x,
+  centerY: number = center.y
 ): string => {
   let angles = `${theta0} ${centerX} ${centerY};`;
   for (let i = 1; i < ticks; i++) {
@@ -53,8 +60,8 @@ const getBreakRotationAngles = (
   maxAngle: number,
   baseAngle: number = 0,
   initialAngle: number = -10,
-  centerX: number = 500,
-  centerY: number = 500
+  centerX: number = center.x,
+  centerY: number = center.y
 ) => {
   let angles = `${initialAngle} ${centerX} ${centerY};${maxAngle} ${centerX} ${centerY};`;
   for (let i = 1; i < ticks; i++) {
@@ -140,14 +147,20 @@ export const Wheel = ({ slices, setSlice }: IProps) => {
 
   return (
     <>
-      <svg height="100%" width="100%" viewBox="-12 -120 1024 1240">
+      <svg
+        height="100%"
+        width="100%"
+        viewBox={`-${sliceEdgeRadius} -${brakeLength - brakeOverlap + brakeRootRadius} ${1000 + 2 * sliceEdgeRadius} ${
+          1000 + 2 * brakeLength - brakeOverlap
+        }`}
+      >
         <defs>
           <filter id="wheelShadow">
             <feDropShadow dx="0" dy="20" stdDeviation="8" floodOpacity={0.3} />
           </filter>
         </defs>
         <circle cx={center.x} cy={center.y} r={radius} style={{ filter: "url(#wheelShadow)" }} />
-        <g transform={`rotate(${getRotationAngle(newSliceIndex, slices.length)} 500 500)`}>
+        <g transform={`rotate(${getRotationAngle(newSliceIndex, slices.length)} ${center.x} ${center.y})`}>
           {isSpinning && (
             <animateTransform
               ref={animateRef}
@@ -169,22 +182,36 @@ export const Wheel = ({ slices, setSlice }: IProps) => {
           ))}
         </g>
         <WheelButton spin={spin} />
-        <g transform={`rotate(-7.2 500 -120)`}>
+        <g transform={`rotate(${initialBrakeAngle} ${center.x} -${brakeLength - brakeOverlap})`}>
           {isSpinning && (
             <animateTransform
               ref={animateBrakeRef}
               attributeName="transform"
               attributeType="XML"
               type="rotate"
-              values={getBreakRotationAngles(ticks, -40, -7.2, -7.2, 500, -120)}
+              values={getBreakRotationAngles(
+                ticks,
+                maxBrakeAngle,
+                initialBrakeAngle,
+                initialBrakeAngle,
+                center.x,
+                -(brakeLength - brakeOverlap)
+              )}
               keyTimes={getBreakTickTimes(ticks, slices.length)}
               dur={spinDur}
               restart="always"
             />
           )}
-          <line x1={500} y1={-108} x2={500} y2={40} stroke="black" strokeWidth={10} />
+          <line
+            x1={center.x}
+            y1={-(brakeLength - brakeOverlap)}
+            x2={center.x}
+            y2={brakeOverlap}
+            stroke="black"
+            strokeWidth={brakeWidth}
+          />
         </g>
-        <circle cx={502.5} cy={-108} r={12} />
+        <circle cx={center.x} cy={-(brakeLength - brakeOverlap)} r={brakeRootRadius} />
       </svg>
     </>
   );
