@@ -141,6 +141,12 @@ export const Wheel = ({ slices, setSlice }: IProps) => {
   return (
     <>
       <svg height="100%" width="100%" viewBox="-12 -120 1024 1240">
+        <defs>
+          <filter id="wheelShadow">
+            <feDropShadow dx="0" dy="20" stdDeviation="8" floodOpacity={0.3} />
+          </filter>
+        </defs>
+        <circle cx={center.x} cy={center.y} r={radius} style={{ filter: "url(#wheelShadow)" }} />
         <g transform={`rotate(${getRotationAngle(newSliceIndex, slices.length)} 500 500)`}>
           {isSpinning && (
             <animateTransform

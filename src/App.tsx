@@ -40,10 +40,12 @@ const foods: ISliceConfig[] = [
   { text: "høne", bgColor: colors.red, imageSrc: hen },
 ];
 
+const wordPlaceholder = "Spinn hjulene!";
+
 function App() {
   const [slice1, setSlice1] = useState<ISliceConfig>();
   const [slice2, setSlice2] = useState<ISliceConfig>();
-  const [compoundWord, setCompoundWord] = useState<string>("Spinn hjulene!");
+  const [compoundWord, setCompoundWord] = useState<string>(wordPlaceholder);
 
   useEffect(() => {
     if (slice1 && slice2) {
