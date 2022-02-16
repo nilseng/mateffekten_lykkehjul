@@ -53,8 +53,13 @@ export const Slice = ({ sliceCount, sliceIndex, radius, center, sliceConfig }: I
           height={160}
         >
           {sliceConfig.imageSrc && (
-            <div className="flex h-full">
-              <img className="ml-60" src={sliceConfig.imageSrc} height={"auto"} width={160} alt={sliceConfig.text} />
+            <div className="flex items-center h-full">
+              <img
+                className="ml-60"
+                src={sliceConfig.imageSrc}
+                alt={sliceConfig.text}
+                style={{ display: "block", maxWidth: "100%", maxHeight: "80%", width: "auto", height: "auto" }}
+              />
             </div>
           )}
           {!sliceConfig.imageSrc && (
