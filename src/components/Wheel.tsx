@@ -1,5 +1,6 @@
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import {
+  baseBrakeAngle,
   brakeLength,
   brakeOverlap,
   brakeRootRadius,
@@ -123,7 +124,7 @@ export const Wheel = ({ slices, setSlice }: IProps) => {
                 newSliceIndex,
                 slices.length,
                 maxBrakeAngle,
-                initialBrakeAngle,
+                baseBrakeAngle,
                 initialBrakeAngle,
                 center.x,
                 -(brakeLength - brakeOverlap)

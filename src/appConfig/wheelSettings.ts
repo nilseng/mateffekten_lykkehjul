@@ -11,6 +11,7 @@ export const brakeLength = 160;
 export const brakeOverlap = 40;
 export const brakeRootRadius = 20;
 export const initialBrakeAngle = -7.2;
+export const baseBrakeAngle = -7.2;
 export const maxBrakeAngle = -40;
 export const brakeWidth = 10;
 
