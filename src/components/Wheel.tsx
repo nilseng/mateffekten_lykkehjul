@@ -13,20 +13,9 @@ import {
   spinDurMs,
   spins,
 } from "../appConfig/wheelSettings";
+import { getRandomIndex, getRotationAngle, getTotalRotation, getTotalTicks } from "../utils/wheelUtils";
 import { ISliceConfig, Slice } from "./Slice";
 import { WheelButton } from "./WheelButton";
-
-const getTotalRotation = (ticks: number, sliceCount: number, base = 360) => {
-  return (base * ticks) / sliceCount;
-};
-
-const getTotalTicks = (currentIndex: number, newIndex: number, sliceCount: number) => {
-  return spins * sliceCount + ((currentIndex - newIndex + sliceCount) % sliceCount);
-};
-
-const getRotationAngle = (i: number, length: number, base = 360, offset = 0): number => {
-  return (base * (length - i)) / length - offset * base;
-};
 
 // Assumes the final angular velocity to be 0
 const getTotalAccelleration = (theta: number, theta0: number = 0, t = 1) => (2 * (theta0 - theta)) / Math.pow(t, 2);
@@ -124,11 +113,12 @@ export const Wheel = ({ slices, setSlice }: IProps) => {
   const animateBrakeRef = useRef<SVGAnimateTransformElement>(null);
 
   const spin = () => {
+    //If the wheel is already spinning, do nothing
     if (isSpinning) return;
     setIsSpinning(true);
     setSlice(undefined);
-    const randomIndex = Math.round(Math.random() * (slices.length - 1));
-    const ticks = getTotalTicks(sliceIndex, randomIndex, slices.length);
+    const randomIndex = getRandomIndex(slices.length);
+    const ticks = getTotalTicks(spins, sliceIndex, randomIndex, slices.length);
     setTicks(ticks);
     setTimeout(() => {
       setIsSpinning(false);
@@ -139,6 +129,9 @@ export const Wheel = ({ slices, setSlice }: IProps) => {
     setNewSliceIndex(randomIndex);
   };
 
+  /* Hack to make sure that the browser does not begin the animation at the wrong point in time.
+    Needed in OSX chrome Version 98.0.4758.80 (Official Build) (arm64) and probably other browsers as well.
+  */
   useEffect(() => {
     if (isSpinning) {
       animateRef.current?.beginElement();
