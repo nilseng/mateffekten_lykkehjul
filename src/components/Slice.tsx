@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { sliceEdgeRadius, thetaOffsetDeg, thetaOffsetRad } from "../appConfig/wheelSettings";
 
 interface IProps {
   sliceCount: number;
@@ -14,10 +15,6 @@ export interface ISliceConfig {
   imageSrc?: string;
   compoundPostfix?: string;
 }
-
-const thetaOffset = -1 / 4;
-const thetaOffsetRad = 2 * Math.PI * thetaOffset;
-const thetaOffsetDeg = 360 * thetaOffset;
 
 export const Slice = ({ sliceCount, sliceIndex, radius, center, sliceConfig }: IProps) => {
   const [theta0] = useState<number>(2 * Math.PI * (sliceIndex / sliceCount) + thetaOffsetRad);
@@ -72,8 +69,8 @@ export const Slice = ({ sliceCount, sliceIndex, radius, center, sliceConfig }: I
           )}
         </foreignObject>
       </g>
-      <circle cx={intersection0X} cy={intersection0Y} r={12} />
-      <circle cx={intersectionX} cy={intersectionY} r={12} />
+      <circle cx={intersection0X} cy={intersection0Y} r={sliceEdgeRadius} />
+      <circle cx={intersectionX} cy={intersectionY} r={sliceEdgeRadius} />
     </g>
   );
 };

@@ -13,3 +13,7 @@ export const brakeRootRadius = 20;
 export const initialBrakeAngle = -7.2;
 export const maxBrakeAngle = -40;
 export const brakeWidth = 10;
+
+const wheelOffset = -1 / 4;
+export const thetaOffsetRad = 2 * Math.PI * wheelOffset;
+export const thetaOffsetDeg = 360 * wheelOffset;

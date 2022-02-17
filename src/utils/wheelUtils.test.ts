@@ -1,4 +1,17 @@
-import { getRandomIndex, getRotationAngle, getTotalRotation, getTotalTicks } from "./wheelUtils";
+import { maxBrakeAngle, spins } from "../appConfig/wheelSettings";
+import {
+  getBrakeRotationAngles,
+  getBrakeTickTimes,
+  getRandomIndex,
+  getRotationAngle,
+  getRotationAngles,
+  getSliceAngle,
+  getTickTimes,
+  getTotalAccelleration,
+  getTotalRotation,
+  getTotalTicks,
+  getVelocity,
+} from "./wheelUtils";
 
 test("getRandomIndex should return a random index in the correct interval", () => {
   const sliceCount = 10;
@@ -37,4 +50,61 @@ test("getRotationAngle should return the correct rotation based on the given ind
   const angle = getRotationAngle(i, sliceCount, base);
   expect(angle).toBeCloseTo(base);
   expect(angle0).toBeLessThan(angle);
+});
+
+test("getTotalAcceleration should return total radial acceleration", () => {
+  const angle0 = 45;
+  const rotation = 1440;
+  const t = 1;
+  const a = getTotalAccelleration(rotation, angle0, t);
+  expect(a).toBeLessThan(0);
+
+  const initialSpeed = -a * t;
+  const finalSpeed = 0;
+  expect(initialSpeed + a * t).toBeCloseTo(finalSpeed);
+});
+
+test("getVelocity should throw on invalid arguments", () => {
+  const v0 = 100;
+  const a = -3600;
+  expect(() => getVelocity(v0, a, 36)).toThrow();
+});
+
+test("getVelocity should return the speed after the next tick", () => {
+  const v0 = 720;
+  const a = -3600;
+  expect(getVelocity(v0, a, 36)).toBeLessThan(v0);
+});
+
+test("getRotationAngles should return a semi colon separated list of angles and rotation points", () => {
+  const sliceCount = 10;
+  const currIndex = 0;
+  const nextIndex = 4;
+  const angles = getRotationAngles(spins, currIndex, nextIndex, sliceCount, getSliceAngle(sliceCount));
+  expect(angles.split(";").length).toEqual(getTotalTicks(spins, currIndex, nextIndex, sliceCount) + 1);
+});
+
+test("getTickTimes should return a semi colon separated list of times between 0 and 1", () => {
+  const sliceCount = 10;
+  const currIndex = 0;
+  const nextIndex = 4;
+  const { tickTimes, tickTimeString } = getTickTimes(spins, currIndex, nextIndex, sliceCount);
+  expect(tickTimes.length).toBe(getTotalTicks(spins, currIndex, nextIndex, sliceCount) + 1);
+  expect(tickTimeString.split(";").length).toEqual(getTotalTicks(spins, currIndex, nextIndex, sliceCount) + 1);
+});
+
+test("getBrakeRotationAngles should return a semi colon separated list of angles and rotation points", () => {
+  const sliceCount = 10;
+  const currIndex = 0;
+  const nextIndex = 4;
+  const angles = getBrakeRotationAngles(spins, currIndex, nextIndex, sliceCount, maxBrakeAngle);
+  expect(angles.split(";").length).toEqual(2 * (getTotalTicks(spins, currIndex, nextIndex, sliceCount) + 1));
+});
+
+test("getBrakeTickTimes should return a semi colon separated list of times between 0 and 1", () => {
+  const sliceCount = 10;
+  const currIndex = 0;
+  const nextIndex = 4;
+  const tickTimeString = getBrakeTickTimes(spins, currIndex, nextIndex, sliceCount);
+  expect(tickTimeString.split(";").length).toEqual(2 * (getTotalTicks(spins, currIndex, nextIndex, sliceCount) + 1));
 });
