@@ -126,6 +126,7 @@ export const Wheel = ({ slices, setSlice }: IProps) => {
   const spin = () => {
     if (isSpinning) return;
     setIsSpinning(true);
+    setSlice(undefined);
     const randomIndex = Math.round(Math.random() * (slices.length - 1));
     const ticks = getTotalTicks(sliceIndex, randomIndex, slices.length);
     setTicks(ticks);
