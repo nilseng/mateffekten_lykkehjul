@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { sliceEdgeRadius, thetaOffsetDeg, thetaOffsetRad } from "../appConfig/wheelSettings";
+import { getSliceAngle } from "../utils/wheelUtils";
 
 interface IProps {
   sliceCount: number;
@@ -16,18 +17,25 @@ export interface ISliceConfig {
   compoundPostfix?: string;
 }
 
-export const Slice = ({ sliceCount, sliceIndex, radius, center, sliceConfig }: IProps) => {
-  const [theta0] = useState<number>(2 * Math.PI * (sliceIndex / sliceCount) + thetaOffsetRad);
-  const [theta0deg] = useState<number>(360 * (sliceIndex / sliceCount) + thetaOffsetDeg);
-  const [theta] = useState<number>(2 * Math.PI * ((sliceIndex + 1) / sliceCount) + thetaOffsetRad);
-  const [thetaDeltaDeg] = useState<number>(360 * (1 / sliceCount));
+const getTheta = (i: number, sliceCount: number, offset: number, base: number) =>
+  i * getSliceAngle(sliceCount, base) + offset;
 
-  const [intersection0X] = useState<number>(center.x + radius * Math.cos(theta0));
-  const [intersection0Y] = useState<number>(center.y + radius * Math.sin(theta0));
-  const [intersection0] = useState<string>(`${intersection0X}, ${intersection0Y}`);
-  const [intersectionX] = useState<number>(center.x + radius * Math.cos(theta));
-  const [intersectionY] = useState<number>(center.y + radius * Math.sin(theta));
-  const [intersection] = useState<string>(`${intersectionX}, ${intersectionY}`);
+const getIntersectionX = (x0: number, radius: number, theta: number) => x0 + radius * Math.cos(theta);
+const getIntersectionY = (y0: number, radius: number, theta: number) => y0 + radius * Math.sin(theta);
+const getCoordinateString = (x: number, y: number) => `${x}, ${y}`;
+
+export const Slice = ({ sliceCount, sliceIndex, radius, center, sliceConfig }: IProps) => {
+  const [theta0] = useState<number>(getTheta(sliceIndex, sliceCount, thetaOffsetRad, 2 * Math.PI));
+  const [theta0deg] = useState<number>(getTheta(sliceIndex, sliceCount, thetaOffsetDeg, 360));
+  const [theta] = useState<number>(getTheta(sliceIndex + 1, sliceCount, thetaOffsetRad, 2 * Math.PI));
+  const [thetaDeltaDeg] = useState<number>(getSliceAngle(sliceCount, 360));
+
+  const [intersection0X] = useState<number>(getIntersectionX(center.x, radius, theta0));
+  const [intersection0Y] = useState<number>(getIntersectionY(center.y, radius, theta0));
+  const [intersection0] = useState<string>(getCoordinateString(intersection0X, intersection0Y));
+  const [intersectionX] = useState<number>(getIntersectionX(center.x, radius, theta));
+  const [intersectionY] = useState<number>(getIntersectionY(center.y, radius, theta));
+  const [intersection] = useState<string>(getCoordinateString(intersectionX, intersectionY));
 
   return (
     <g>
