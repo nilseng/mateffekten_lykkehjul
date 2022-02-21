@@ -63,7 +63,7 @@ export const Slice = ({ sliceCount, sliceIndex, radius, center, sliceConfig }: I
                 className="ml-60"
                 src={sliceConfig.imageSrc}
                 alt={sliceConfig.text}
-                style={{ display: "block", maxWidth: "100%", maxHeight: "80%", width: "auto", height: "auto" }}
+                style={{ display: "block", maxWidth: "100%", maxHeight: "100%", width: "auto", height: "auto" }}
               />
             </div>
           )}
