@@ -1,13 +1,14 @@
 export const radius = 500;
 export const center = { x: radius, y: radius };
+// Change spinDurMs to change the duration of the total rotation. That is, time until a word is selected.
 export const spinDurMs = 20000;
 export const spinDur = spinDurMs / 1000;
+// Change spins to change the number of times the wheels rotate
 export const spins = 10;
 
 export const sliceEdgeRadius = 12;
 
 export const brakeLength = 160;
-// Setting deciding how far the brake should overlap with the wheel
 export const brakeOverlap = 40;
 export const brakeRootRadius = 20;
 export const initialBrakeAngle = -7.2;
